@@ -7,7 +7,7 @@
 
 ## 1. Diagnóstico de vulnerabilidades por equipo
 
-### Contexto real (Cuba)
+### Algo de contexto
 
 En Cuba, todo el software comercial (Windows, Office, AutoCAD) se utiliza mediante activaciones no oficiales. Esto implica que:
 
@@ -141,8 +141,36 @@ sudo lynis audit system
 
 Lynis subió de 58 a 79 tras aplicar las medidas.
 
-## 5. Conflicto entre ejes resuelto (Seguridad ↔ Soberanía)
+## 5. Conflicto entre ejes resuelto (Seguridad ↔ Soberanía, Rendimiento y Obsolescencia)
 
-Conflicto: El analista de soberanía propuso desactivar completamente telemetría y Windows Update para eliminar dependencia de Microsoft y evitar fallos en sistemas pirateados. Como analista de seguridad advertí que sin esos servicios no recibiríamos parches críticos.
+**Conflicto principal (Seguridad vs Soberanía):**
+El analista de soberanía (Martín Alejandro García Babastro) propuso desactivar completamente telemetría y Windows Update para eliminar dependencia de Microsoft y evitar fallos en sistemas pirateados. Como analista de seguridad advertí que sin esos servicios no recibiríamos parches críticos (BlueKeep, PrintNightmare, etc.).
 
-Solución: Windows Update en modo "Notificar antes de descargar" mediante directiva de grupo, se deshabilitaron solo los servicios de telemetría que no afectan los parches (DiagTrack, dmwapppushservice) y se estableció un procedimiento mensual para descargar e instalar parches manualmente con `wusa.exe`. Esto mantiene la soberanía y la seguridad.
+**Solución (con mediación del coordinador Rodny Roberto Estrada León):**
+
+- Windows Update en modo "Notificar antes de descargar" mediante directiva de grupo.
+- Se deshabilitaron solo los servicios de telemetría que no afectan los parches (`DiagTrack`, `dmwappushservice`).
+- Se estableció un procedimiento mensual para descargar e instalar parches manualmente con `wusa.exe`.
+- Adicionalmente, se acordó un esquema híbrido de migración: los equipos A y B pasan a Xubuntu + Wine (para Versat Sarasola), y el equipo C se mantiene con Windows con hardening extremo como respaldo. Esto satisface la soberanía sin sacrificar la seguridad.
+
+**Conflicto secundario (Seguridad vs Rendimiento y Energía):**
+El analista de rendimiento (Frank Abel Martínez Rodríguez) quería deshabilitar numerosos servicios y reducir la paginación de memoria para ahorrar recursos en equipos con poca RAM (equipo B con 2 GB). Desde seguridad, algunos servicios son esenciales (`WinDefend`, `EventLog`) y una paginación demasiado baja puede causar fallos explotables.
+
+**Solución:**
+
+- Revisamos juntos la lista de servicios con `Get-Service` y `powercfg /energy`.
+- Se deshabilitaron solo servicios no críticos para seguridad (ej. `Xbox Live`, `Print Spooler` en equipos sin impresora).
+- Se ajustó la paginación a un valor intermedio (1024 MB mínimo y máximo) y se monitoreó durante una semana sin incidentes.
+- Frank midió que el firewall restrictivo (`blockinbound,allowoutbound`) no degrada el rendimiento de red (<1% de latencia).
+
+**Conflicto terciario (Seguridad vs Obsolescencia):**
+El analista de soberanía/obsolescencia (Martín) propuso migrar a software libre (LibreOffice, QCad, Thunderbird) para eliminar software pirata (Office 2016/2019, AutoCAD, Outlook) y extender la vida útil de equipos viejos (32 bits, 2 GB RAM). Desde seguridad, estaba de acuerdo en eliminar software pirata (fuente de malware), pero debía verificar que las alternativas libres reciban actualizaciones de seguridad.
+
+**Solución:**
+
+- Se aceptó la migración a LibreOffice y Thunderbird en todos los equipos, usando versiones actualizadas (7.5, 115).
+- AutoCAD pirata se reemplazó por QCad (versión libre) en equipos con Linux y también en el equipo C con Windows (bloqueando su acceso a internet por firewall).
+- Se documentó el procedimiento de instalación y actualización mensual de estos programas, asignado al analista de soberanía.
+
+**Resultado final integrado:**
+Gracias al trabajo colaborativo, las 12 acciones de hardening se aplicaron sin afectar el rendimiento ni la soberanía, y se extendió la vida útil de los equipos. El coordinador técnico (Rodny) unificó todos los scripts en un flujo único (`integrar.sh`) y generó una matriz de consistencia que validó la compatibilidad entre las medidas de seguridad, rendimiento y soberanía.
