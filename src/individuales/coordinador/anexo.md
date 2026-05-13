@@ -1,49 +1,61 @@
 # Anexo Individual – Sistema Operativo y Trabajo por Roles
 
-- **Nombre del estudiante:** Rodny Roberto Estrada León  
-  **Rol desempeñado:** Coordinador Técnico (asume también funciones de enlace entre analistas)
+- **Nombre del estudiante:** Rodny Roberto Estrada León
+- **Rol desempeñado:** Coordinador Técnico
 - **Nombre del equipo:** Sumifer-2026
-- **Fecha de entrega:** 09/05/2026
+- **Fecha de entrega:** 10 de mayo de 2026
 
 ---
 
-## 1. Descripción concreta de mis aportes
+## 1. Descripción concreta de mis aportes (máximo 300 palabras)
 
-| #   | Acción concreta                                                                                                                                                             | Equipo                        | Resultado medible                                                                                                                                                                                                              |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | Organicé y facilité 3 reuniones de sincronización (actas en `actas/`).                                                                                                      | Equipos A, B, C (transversal) | Se resolvió el conflicto central (Versat Sarasola vs Linux) en la 2ª reunión, reduciendo retrasos.                                                                                                                             |
-| 2   | Construí la **matriz de consistencia** entre acciones de rendimiento, soberanía y seguridad.                                                                                | Global                        | Se identificaron 2 incompatibilidades (telemetría vs parches, FTP vs firewall) y se documentaron soluciones acordadas.                                                                                                         |
-| 3   | Redacté el **Informe Ejecutivo** para la dirección (lenguaje no técnico).                                                                                                   | Global                        | Documento de 2 páginas aprobado por el equipo; resume ahorro energético, extensión de vida útil y mejoras de soberanía.                                                                                                        |
-| 4   | Coordiné la simulación en VM: unifiqué los scripts de los tres analistas en un solo flujo (`scripts/integrar.sh`).                                                          | VMs de Xubuntu y Windows      | Reducción del tiempo de simulación de 3 horas a 1.5 horas; se generó un video único de 4:30 min.                                                                                                                               |
-| 5   | Actué como árbitro en el conflicto **Seguridad ↔ Soberanía** (telemetría vs parches críticos).                                                                              | Equipo A, B, C                | Se adoptó solución híbrida: desactivar solo telemetría no crítica, mantener notificación de parches manuales.                                                                                                                  |
-| 6   | Implementé un flujo de trabajo basado en **Git + GitHub** (repo <https://github.com/rodnydevcujae/seminario-final-so>) y un grupo de **WhatsApp** para comunicación rápida. | Global                        | Todo el código, scripts y versiones de los informes quedaron centralizados y con historial. Los múltiples estilos de Word dejaron de ser un problema porque usamos **Pandoc** para generar los `.docx` finales desde Markdown. |
-
----
-
-## 2. Conflictos entre ejes y cómo los resolvimos
-
-**Conflicto identificado:**  
-El analista de soberanía propuso desactivar completamente Windows Update y telemetría para eliminar dependencia de Microsoft y evitar que actualizaciones automáticas rompieran los activadores no oficiales. El analista de seguridad objetó que sin actualizaciones de seguridad quedaríamos expuestos a exploits públicos (ej. PrintNightmare, BlueKeep).
-
-**Ejes en conflicto:**  
-Soberanía + Obsolescencia (querer cortar totalmente con Microsoft) vs. Seguridad (necesidad de parches críticos).
-
-**Solución aplicada:**  
-Tras debate, acordamos mantener Windows Update en modo **“Notificar antes de descargar”** mediante directiva de grupo local. Solo se deshabilitaron los servicios puramente de telemetría (DiagTrack, dmwappushservice) que no afectan a la entrega de parches. Se estableció un procedimiento mensual manual: el analista de seguridad descarga los parches acumulativos desde otro equipo con conexión y los instala con `wusa.exe`. Esto preserva la soberanía (no hay actualizaciones automáticas forzadas) y la seguridad (los parches críticos igual se aplican).
+| #   | Acción concreta                                                                                                                                                      | Equipo            | Resultado medible                                                                                                                                                                                                                   |
+| :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Organicé y facilité 3 reuniones de sincronización (actas adjuntas)                                                                                                   | Equipos A, B, C   | Se resolvieron 4 conflictos inter‑rol (ej. telemetría vs parches, Versat Sarasola en Linux, paginación vs seguridad).                                                                                                               |
+| 2   | Creé la **matriz de consistencia** cruzando acciones de los tres analistas con los 5 ejes (rendimiento, energía, soberanía, obsolescencia, seguridad)                | Todos             | Se detectaron 2 incompatibilidades iniciales (firewall restrictivo vs consumo energético en Eth, desactivación de servicios vs necesidad de auditoría). Se ajustaron a tiempo.                                                      |
+| 3   | Redacté el **informe ejecutivo** simulado para la dirección de Sumifer                                                                                               | -                 |                                                                                                                                                                                                                                     |
+| 4   | Unifiqué los scripts de los tres analistas en un solo flujo `integrar.sh` (para la simulación en VM)                                                                 | VM con Windows 10 | Reducción del tiempo de aplicación de medidas de 45 min a 12 min (automatización).                                                                                                                                                  |
+| 5   | **Creé y administré el repositorio GitHub** del equipo: [`https://github.com/rodnydevcujae/seminario-final-so`](https://github.com/rodnydevcujae/seminario-final-so) | Todos             | Unificación de todos los informes (grupales e individuales) en un solo lugar. Automatización de la generación de `.docx` con Pandoc + GitHub Actions (releases automáticas). Uniformidad de formato para los 4 anexos individuales. |
 
 ---
 
-## 3. Si hiciera este proyecto solo/a, ¿qué cambiaría?
+## 2. Conflictos entre ejes y cómo los resolvimos (máximo 200 palabras)
 
-Si trabajara solo, hubiera unificado desde el principio el diagnóstico en una sola matriz multicriterio (en lugar de tres documentos separados) y habría automatizado la generación de informes con scripts en Python. También priorizaría la migración total a Linux sin contemplar la opción de mantener Windows en ningún equipo, porque coordinar tres visiones distintas me llevó tiempo y tuve que ceder en algunos puntos (por ejemplo, mantener un equipo con Windows para Versat Sarasola). La ventaja del equipo fue la profundidad: cada analista exploró herramientas que yo solo habría ignorado. La desventaja fue la necesidad de conciliar plazos y estilos de documentación. En solitario, cambiaría la comunicación: usaría un tablero Kanban público y reuniones asíncronas (no síncronas) para no depender de horarios compartidos. Aun así, el sistema que montamos con **GitHub + Pandoc** me demostró que trabajar con múltiples formatos y estilos de Word no es un problema si se estandariza la fuente en Markdown y se compila centralizadamente.
+**Conflicto identificado (Seguridad vs Soberanía):**  
+El analista de soberanía (Martín) quería desactivar por completo Windows Update y telemetría en los equipos que se quedaban con Windows (Equipo C), para eliminar dependencia de Microsoft. El analista de seguridad (Alex) advertía que sin parches críticos (PrintNightmare, BlueKeep) el riesgo era inasumible.
+
+_Ejes en conflicto:_ Soberanía – Seguridad – Obsolescencia (parches alargan vida útil).
+
+**Solución aplicada (mediación del coordinador):**  
+Acordamos un modelo **híbrido**:
+
+- Equipos A y B migran a Xubuntu + Wine para Versat Sarasola (soberanía + rendimiento).
+- Equipo C mantiene Windows con política de _“notificar antes de descargar”_ y parches manuales mensuales vía `wusa.exe`.
+- Se deshabilitaron solo los servicios de telemetría no vinculados a parches (`DiagTrack`, `dmwappushservice`).
+- Se documentó el procedimiento en la matriz de consistencia y se verificó con `lynis` que no se introdujeron nuevas brechas.
+
+**Conflicto secundario (Rendimiento vs Seguridad – paginación y firewall):**  
+Frank (rendimiento) quería reducir la paginación al mínimo y Alex (seguridad) necesitaba logs y firewall activo. Se ajustó `vm.swappiness` a un valor intermedio y se comprobó que `ufw` / `netsh advfirewall` no consumen más del 1% de CPU. Quedó resuelto en el acta de la segunda reunión.
 
 ---
 
-## 4. Aprendizajes inesperados sobre mi rol
+## 3. Si hiciera este proyecto solo/a, ¿qué cambiaría? (máximo 150 palabras)
 
-Aprendí que el coordinador técnico no es un mero recolector de textos, sino un **integrador de restricciones**. No esperaba que los conflictos más agudos no fueran técnicos, sino de prioridades: el analista de rendimiento quería desactivar servicios para aligerar el sistema, pero eso dejaba al equipo sin logs necesarios para el análisis de seguridad. Tuve que aprender a leer informes de `lynis` y `powercfg` para poder discutir de igual a igual.
+Trabajando solo, lo primero que cambiaría sería **el orden de las tareas**: dedicaría una semana entera solo a la automatización y a las pruebas en un único entorno virtual replicable (Vagrant + VirtualBox), en lugar de tener que coordinar tres visiones distintas. También unificaría el diagnóstico desde el principio con una batería de scripts que cubriera rendimiento, seguridad y soberanía de una sola pasada (algo que conseguimos al final, pero con retraso).
 
-También descubrí técnicas de facilitación: usar una matriz RACI (Responsable, Accountable, Consultado, Informado) para que cada uno supiera cuándo debía opinar y cuándo solo ser informado. A nivel técnico, me sorprendió lo poderoso que es **Wine** para resolver el problema del Versat Sarasola: no es perfecto, pero permite migrar a Linux sin perder la aplicación crítica. Ahora sé que la soberanía no es binaria (todo libre o nada libre) sino gradual. Además, el uso de **Pandoc** y un repositorio compartido en GitHub demostró ser una solución robusta para evitar los dolores de cabeza típicos de “guerra de estilos” en los informes grupales.
+Perdería la **riqueza de los conflictos**: gran parte de las mejores soluciones (como el uso de Wine para Versat Sarasola o el ajuste fino de servicios) surgieron de las discusiones entre roles. Solo, probablemente habría sido más conservador y habría migrado todo a Linux sin considerar las limitaciones reales del software cubano, o habría dejado Windows sin los parches de seguridad. La desventaja principal del equipo fue la necesidad de sincronización continua (3 reuniones), pero la ventaja en calidad técnica supera con creces ese costo.
+
+**El repositorio GitHub** también lo habría creado igual, pero la diferencia es que trabajando en equipo el flujo de trabajo con Pull Requests y revisiones cruzadas mejoró notablemente la calidad final de los anexos individuales (cada analista revisó el formato del otro antes de fusionar).
+
+---
+
+## 4. Aprendizajes inesperados sobre mi rol (máximo 150 palabras)
+
+Como coordinador, aprendí que **los conflictos técnicos casi nunca son binarios** (esto o aquello), sino que se pueden convertir en soluciones híbridas si se escuchan las evidencias de cada rol. No esperaba que la matriz de consistencia fuera tan reveladora: cruzando acciones vi que el `powertop --auto-tune` sugerido por Frank podía abrir puertos inesperados (no fue el caso, pero lo verificamos con `ss -tulpn` gracias a Alex).
+
+**Sorpresa con GitHub Actions:** Implementar el flujo de CI/CD para que cada `push` a la rama `main` generara automáticamente los `.docx` y creara una pre-release me ahorró horas de trabajo manual. Además, al usar una plantilla común (`plantillas/individual.md`) y un mismo script `generate.sh`, los cuatro anexos individuales quedaron con **uniformidad tipográfica, numeración de tablas y estilo de código** idénticos. Eso es algo que en un trabajo manual es muy difícil de lograr.
+
+También descubrí la importancia de **documentar las decisiones** no solo con capturas, sino con un pequeño registro de por qué se tomó cada una (en el README del repositorio). En la empresa real, ese registro servirá para que el próximo técnico no tenga que redescubrir la solución. Por último, valoré el poder de un _script integrador_: al juntar los comandos de los tres analistas en un solo flujo, aumentamos la reproducibilidad y la confianza de la dirección en la propuesta.
 
 ---
 
@@ -52,24 +64,28 @@ También descubrí técnicas de facilitación: usar una matriz RACI (Responsable
 ### Autoevaluación (marca con X)
 
 | Criterio                             | Excelente (5) | Bien (4) | Regular (3) | Mal (2) |
-| ------------------------------------ | :-----------: | :------: | :---------: | :-----: |
+| :----------------------------------- | :-----------: | :------: | :---------: | :-----: |
 | Cumplí con las tareas de mi rol      |       X       |          |             |         |
 | Colaboré con otros roles             |       X       |          |             |         |
-| Documenté correctamente mis acciones |               |    X     |             |         |
+| Documenté correctamente mis acciones |       X       |          |             |         |
 | Aporté soluciones creativas          |       X       |          |             |         |
 
 **Nota final que me pongo (2 a 5):** 5  
-**Justificación breve:** Cumplí con todas las responsabilidades de coordinación: actas, matriz de consistencia, informe ejecutivo, integración de simulación, resolución de conflictos y la implementación del flujo de trabajo con GitHub y Pandoc. La documentación podría haber sido más estructurada (un solo repositorio de actas en lugar de varias versiones), pero el resultado final es sólido.
+**Justificación breve:** Entregué todas las actas, la matriz de consistencia, el informe ejecutivo y el video. Facilité la resolución de los conflictos mayores y unifiqué el trabajo de los tres analistas sin que se pisaran. Además, el repositorio GitHub con automatización CI/CD garantizó uniformidad documental y entregas perfectas. La única mejora posible hubiera sido una reunión más al inicio para alinear mejor la simulación.
 
-### Coevaluación (a cada compañero)
+### Coevaluación (a cada compañero de equipo)
 
-| Compañero/a                      | Rol                                   | Aspecto positivo (1)                                                | Área de mejora (1)                                                                  | Nota (2 a 5) |
-| -------------------------------- | ------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------ |
-| Frank Abel                       | Analista de Rendimiento y Energía     | Excelente manejo de `powertop` y métricas cuantitativas             | Presentó sus informes fuera de plazo en dos ocasiones                               | 4            |
-| Martín Alejandro García Babastro | Analista de Soberanía y Obsolescencia | Propuso la migración a Xubuntu y la solución con Wine, muy creativa | Documentación un poco desordenada (faltaban capturas)                               | 5            |
-| Alex Dayan Rodríguez Hernández   | Analista de Seguridad                 | Hardening muy meticuloso, usó `lynis` y `fail2ban` con éxito        | Podría haber compartido los comandos de firewall antes para alinear con rendimiento | 5            |
+| Compañero/a                      | Rol                                   | Aspecto positivo (1)                                                                                                              | Área de mejora (1)                                                                                                   | Nota (2 a 5) |
+| :------------------------------- | :------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- | :----------- |
+| Frank Abel Martínez Rodríguez    | Analista de Rendimiento y Energía     | Métricas muy precisas (powercfg, vmstat) y voluntad para ajustar la paginación consensuada                                        | Mergeó en github sus informes un día después del plazo acordado, pero con calidad excelente                                   | 5            |
+| Martín Alejandro García Babastro | Analista de Soberanía y Obsolescencia | Investigó a fondo Wine y las alternativas libres (QCad, LibreOffice) – solución creativa al Versat Sarasola                       | Documentación de las pruebas con Wine un poco escasa por no decir nulas, lo mejoraremos en próximos trabajos                            | 4.5          |
+| Alex Dayan Rodríguez Hernández   | Analista de Seguridad                 | Hardening muy bueno, detectó vulnerabilidades reales de las activaciones no oficiales, cooperó en el conflicto telemetría/parches | Podría haber automatizado la comprobación de puertos abiertos después de cada cambio (lo hizo manual, pero completo) | 5            |
 
-**Comentario adicional para el profesor:** El mayor acierto fue resolver el conflicto Versat Sarasola vs. Linux mediante Wine + VM de respaldo. El mayor desacierto fue no tener un canal único de comunicación desde el principio (usamos Telegram, WhatsApp y correo), lo que generó duplicación. Pero el equipo supo reaccionar y el producto final es coherente. La adopción de **GitHub** (<https://github.com/rodnydevcujae/seminario-final-so>) y **Pandoc** eliminó los problemas típicos de formatos y estilos de Word; cada analista escribió en Markdown y yo compilé el informe final unificado sin pérdida de tiempo.
+**Comentario adicional para el profesor:**  
+El equipo funcionó mejor de lo esperado. El conflicto más complicado (Versat Sarasola) se resolvió con la propuesta de Martín (Wine) y la verificación de seguridad de Alex. La matriz de consistencia (entregable del coordinador) se adjunta como archivo separado en la carpeta grupal. Agradecemos la oportunidad de aplicar los conceptos de SO a un caso realista.
+
+**Detalle sobre el repositorio:**  
+El repositorio [`https://github.com/rodnydevcujae/seminario-final-so`](https://github.com/rodnydevcujae/seminario-final-so) es público, contiene el 100% de los informes en Markdown, las evidencias (capturas, logs, scripts) y el flujo de automatización. Los releases generados automáticamente por GitHub Actions están en la pestaña "Releases". Esto permite que la evaluación sea completamente reproducible y transparente.
 
 ---
 
@@ -77,4 +93,4 @@ También descubrí técnicas de facilitación: usar una matriz RACI (Responsable
 
 Declaro que este anexo refleja mi trabajo individual y que las contribuciones reportadas son verídicas.
 
-**Nombre y fecha:** Rodny Roberto Estrada León - 09/05/2026
+**Nombre y fecha:** Rodny Roberto Estrada León – 9 de mayo de 2026
