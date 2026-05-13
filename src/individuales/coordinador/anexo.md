@@ -32,8 +32,6 @@ _Ejes en conflicto:_ Soberanía – Seguridad – Obsolescencia (parches alargan
 - Se deshabilitaron solo los servicios de telemetría no vinculados a parches (`DiagTrack`, `dmwappushservice`).
 - Se documentó el procedimiento en la matriz de consistencia y se verificó con `lynis` que no se introdujeron nuevas brechas.
 
-**Conflicto secundario (Rendimiento vs Seguridad – paginación y firewall):** Frank (rendimiento) quería reducir la paginación al mínimo y Alex (seguridad) necesitaba logs y firewall activo. Se ajustó `vm.swappiness` a un valor intermedio y se comprobó que `ufw` / `netsh advfirewall` no consumen más del 1% de CPU. Quedó resuelto en el acta de la segunda reunión.
-
 ---
 
 ## 3. Si hiciera este proyecto solo/a, ¿qué cambiaría? (máximo 150 palabras)
@@ -48,11 +46,9 @@ Perdería la **riqueza de los conflictos**: gran parte de las mejores soluciones
 
 ## 4. Aprendizajes inesperados sobre mi rol (máximo 150 palabras)
 
-Como coordinador, aprendí que **los conflictos técnicos casi nunca son binarios** (esto o aquello), sino que se pueden convertir en soluciones híbridas si se escuchan las evidencias de cada rol. No esperaba que la matriz de consistencia fuera tan reveladora: cruzando acciones vi que el `powertop --auto-tune` sugerido por Frank podía abrir puertos inesperados (no fue el caso, pero lo verificamos con `ss -tulpn` gracias a Alex).
+Como coordinador, aprendí que **los conflictos técnicos casi nunca son binarios** (esto o aquello), sino que se pueden convertir en soluciones híbridas si se escuchan las evidencias de cada rol.
 
-**Beneficios con GitHub Actions:** Implementar el flujo de CI/CD para que cada `push` a la rama `main` generara automáticamente los `.docx` y creara una pre-release me ahorró horas de trabajo manual. Además, al usar una plantilla común (`plantillas/individual.md`) y un mismo script `generate.sh`, los cuatro anexos individuales quedaron con **uniformidad tipográfica, numeración de tablas y estilo de código** idénticos. Eso es algo que en un trabajo manual es muy difícil de lograr.
-
-También descubrí la importancia de **documentar las decisiones** no solo con capturas, sino con un pequeño registro de por qué se tomó cada una (en el README del repositorio). En la empresa real, ese registro servirá para que el próximo técnico no tenga que redescubrir la solución. Por último, valoré el poder de un _script integrador_: al juntar los comandos de los tres analistas en un solo flujo, aumentamos la reproducibilidad y la confianza de la dirección en la propuesta.
+Implementar el flujo de CI/CD para que cada `push` a la rama `main` generara automáticamente los `.docx` y creara una pre-release me ahorró horas de trabajo manual. Además, al usar una plantilla común (`plantillas/individual.md`) y un mismo script `generate.sh`, los cuatro anexos individuales quedaron con **uniformidad tipográfica, numeración de tablas y estilo de código** idénticos. Eso es algo que en un trabajo manual es muy difícil de lograr.
 
 ---
 
@@ -77,9 +73,6 @@ También descubrí la importancia de **documentar las decisiones** no solo con c
 | Frank Abel Martínez Rodríguez    | Analista de Rendimiento y Energía     | Métricas muy precisas (powercfg, vmstat) y voluntad para ajustar la paginación consensuada                                        | Mergeó en github sus informes un día después del plazo acordado, pero con calidad excelente                                   | 5            |
 | Martín Alejandro García Babastro | Analista de Soberanía y Obsolescencia | Investigó a fondo Wine y las alternativas libres (QCad, LibreOffice) – solución creativa al Versat Sarasola                       | Documentación de las pruebas con Wine un poco escasa por no decir nulas, lo mejoraremos en próximos trabajos                            | 4.5          |
 | Alex Dayan Rodríguez Hernández   | Analista de Seguridad                 | Hardening muy bueno, detectó vulnerabilidades reales de las activaciones no oficiales, cooperó en el conflicto telemetría/parches | Podría haber automatizado la comprobación de puertos abiertos después de cada cambio (lo hizo manual, pero completo) | 5            |
-
-**Comentario adicional para el profesor:**  
-El equipo funcionó mejor de lo esperado. El conflicto más complicado (Versat Sarasola) se resolvió con la propuesta de Martín (Wine) y la verificación de seguridad de Alex. La matriz de consistencia (entregable del coordinador) se adjunta como archivo separado en la carpeta grupal. Agradecemos la oportunidad de aplicar los conceptos de SO a un caso realista.
 
 **Detalle sobre el repositorio:**  
 El repositorio [`https://github.com/rodnydevcujae/seminario-final-so`](https://github.com/rodnydevcujae/seminario-final-so) es público, contiene el 100% de los informes en Markdown, las evidencias (capturas, logs, scripts) y el flujo de automatización. Los releases generados automáticamente por GitHub Actions están en la pestaña "Releases". Esto permite que la evaluación sea completamente reproducible y transparente.
