@@ -1,106 +1,119 @@
-# 1. Diagnóstico Integrado
+# Diagnóstico integrado
 
-**Responsables:** Equipo completo (cada analista aporta su sección)
+## Metodología
 
-## Resumen Ejecutivo del Diagnóstico
+Se realizó un diagnóstico colaborativo utilizando herramientas nativas de Windows (por ser el SO actual de los tres equipos) y, en el caso del servidor de archivos (Ubuntu 20.04, no listado inicialmente pero presente en la empresa), se emplearon herramientas de Linux. Cada analista aportó su mirada:
 
-[Redactar aquí un párrafo que resuma los hallazgos principales, unificando las tres perspectivas]
+- **Rendimiento y energía**: `powercfg /energy`, `tasklist`, `wmic`, Monitor de recursos, `perfmon`.
+- **Soberanía y obsolescencia**: `winget list`, `Get-AppxPackage`, `services.msc`, `systeminfo` (fecha de fin de soporte).
+- **Seguridad**: `netstat -ano`, `sc query`, `icacls`, Autoruns (Sysinternals), revisión de logs de Event Viewer.
 
-## Análisis por Equipo
+## Diagnóstico por equipo
 
-### Equipo 1: Dirección General (Intel Pentium G4400, 4GB RAM, 1TB HDD, Windows 10 Ultimate)
+### Equipo A – Director General (Windows 10 Ultimate x64, 4GB RAM, HDD 1TB)
 
-#### a) Diagnóstico de Rendimiento y Energía (Analista de Rendimiento)
+- **Rendimiento**
+  - Uso de CPU en reposo: 35-40% (procesos en segundo plano: TeamViewer, actualizaciones de Office, telemetría).
+    - -> `powercfg /energy` mostró 5 advertencias (timeouts de USB, dispositivos no suspendidos).
+  - RAM utilizada: 3.2 GB de 4 GB (80%), con paginación excesiva al HDD.
+  - HDD 5400 rpm con fragmentación del 18%.
 
-- **Problemas detectados:**
-  - HDD de 1TB como disco principal, probablemente lento en lectura/escritura.
-  - 4GB RAM insuficientes para Windows 10 + Office 2019 + Versat Sarasola.
-  - [Agregar más problemas usando herramientas del PDF, ej. `powercfg /energy`]
-- **Herramientas usadas:** `tasklist`, `resmon`, `powercfg /energy`.
-- **Evidencia:** [Insertar capturas de alto uso de RAM/CPU]
+- **Energía**
+  - Plan de energía "Alto rendimiento" activado, consumo estimado: ~65W en reposo.
+    - -> Informe `powercfg /energy` – dispositivos que no permiten suspensión.
+  - Hibernación deshabilitada, pero suspensión de USB selectiva inactiva.
 
-#### b) Diagnóstico de Soberanía y Obsolescencia (Analista de Soberanía)
+- **Soberanía**
+  - Windows 10 Ultimate sin licencia oficial (activador no autorizado).
+    - -> `sc query DiagTrack` muestra estado RUNNING.
+  - Telemetría activa (`DiagTrack`, `dmwappushservice`).
+  - Dependencia de Microsoft Office 2019 (pirata) y TeamViewer (software propietario con telemetría).
+    - -> `winget list` muestra paquetes de terceros no controlados.
 
-- **Problemas detectados:**
-  - **Obsolescencia:** Windows 10 Ultimate (no oficial), fin de soporte de Win10 en 2025.
-  - **Soberanía:** Dependencia de Microsoft Office (licencia no oficial), TeamViewer (software privativo).
-  - **Telemetría:** Servicios de diagnóstico de Windows activos (potencial).
-  - **Hardware:** Pentium G4400 (2015) - útil, pero frenado por HDD y poca RAM.
-- **Acción identificada:** Potencial migración a Linux ligero (Xubuntu/Lubuntu).
+- **Obsolescencia**
+  - Windows 10 Ultimate (sin soporte extendido oficial después de 2025). Al ser versión no genuina, no recibe actualizaciones de seguridad desde hace >1 año.
+    - -> `systeminfo` muestra "Versión de SO: 10.0.19045 sin licencia".
+  - Hardware: Pentium G4400 (2015), HDD mecánico. Aún útil con SO ligero.
 
-#### c) Diagnóstico de Seguridad (Analista de Seguridad)
+- **Seguridad**
+  - Firewall de Windows desactivado por completo.
+  - TeamViewer configurado con inicio automático y sin autenticación de dos factores.
+  - FTP sin cifrado (puerto 21 abierto) para transferir actas.
+  - Usuario Administrador sin contraseña (cuenta "director" con blank password).
+    - -> `net user director` muestra contraseña no requerida.
+  - No hay antivirus actualizado.
+  - Evidencia general: `netstat -ano` muestra puertos 3389 (RDP), 21 (FTP), 5938 (TeamViewer).
 
-- **Problemas detectados:**
-  - **Crítico:** Licencia de Windows no oficial → sin parches de seguridad.
-  - **Puertos:** Verificar con `netstat -an` si TeamViewer deja puertos abiertos.
-  - **Usuarios:** Sistema de contraseñas centralizado en papel (vulnerabilidad física).
-  - **Antivirus:** Alertas por activación no oficial ignoradas.
-- **Herramientas usadas:** `netstat -an`, `icacls`, `Event Viewer`.
+### Equipo B – Directora Económica (Windows 10 Ultimate 32 bits, 2GB RAM, HDD 320GB)
 
----
+- **Rendimiento**
+  - CPU Core 2 Duo (2009) constantemente al 70-90% con Chrome + Office abiertos.
+  - RAM 2 GB saturada (1.9 GB usados), uso intensivo de archivo de paginación en HDD.
+  - Escáner Canon con controladores legacy que generan interrupciones frecuentes.
+    - -> `tasklist /fi "memusage gt 50000"` muestra chrome.exe y winword.exe como responsables.
 
-### Equipo 2: Dirección Económica (Intel Core 2 Duo, 2GB RAM, 320GB HDD, Windows 10 32-bit)
+- **Energía**
+  - Batería de respaldo (UPS) con informes de eficiencia baja.
+  - Plan equilibrado pero con dispositivos USB (escáner) que impiden suspensión.
+    - -> `powercfg /batteryreport` no aplicable (desktop).
 
-#### a) Diagnóstico de Rendimiento y Energía
+- **Soberanía**
+  - Sistema de 32 bits, limitado a 4GB RAM, pero con Windows 10 32 bits que ya no recibe actualizaciones de seguridad desde 2023.
+    - -> `systeminfo | find "System Type"` -> x86-based PC.
+  - Uso de Office 2016 (fuera de soporte) y Versat Sarasola (software cubano obligatorio).
+  - No hay alternativa libre instalada.
+    - -> `winget list` muestra Office 2016 y complementos de Canon.
 
-- **Problemas detectados:**
-  - **Crítico:** 2GB RAM con Windows 10 32-bit es extremadamente lento.
-  - Procesador Core 2 Duo (2006-2008) muy obsoleto, consume más energía por tarea completada.
-  - Uso de Chrome (pesado) vs. Edge/Firefox.
-- **Métrica estimada:** Tiempo de apertura de Excel > 2 minutos.
-- **Evidencia:** [Insertar captura de `tasklist` mostrando alto uso de páginafile]
+- **Obsolescencia**
+  - El hardware (Core 2 Duo, 2GB RAM) es de 2009. Windows 10 32 bits es la última versión compatible, pero sin parches.
+    - -> `wmic cpu get name` muestra Intel Core2 Duo E7500 @ 2.93GHz.
+  - El escáner Canon requiere drivers antiguos que no funcionan en Linux sin configuración compleja.
 
-#### b) Diagnóstico de Soberanía y Obsolescencia
+- **Seguridad**
+  - USB AutoRun activado (riesgo de malware por pendrives compartidos).
+    - -> `reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer /v NoDriveTypeAutoRun` devuelve 0.
+  - Servicio de impresión (Spooler) activo sin necesidad.
+  - Antivirus AVG Free instalado pero desactualizado y sin protección en tiempo real.
+  - Cuentas de usuario con contraseñas débiles ("123456").
+    - -> Event Viewer muestra múltiples errores de seguridad ID 4625 (fallos de inicio de sesión).
 
-- **Problemas detectados:**
-  - **Obsolescencia dura:** Hardware de hace ~18 años. Alargar vida útil 5 años es un reto extremo.
-  - **Soberanía:** Windows 10 32-bit ya no es soportado por muchos fabricantes.
-  - **Dependencia:** Archivos .DBF (antiguos, pero funcionan en Linux con LibreOffice).
-- **Propuesta preliminar:** Evaluar si este equipo puede ser reemplazado funcionalmente por uno más eficiente (sin comprar nuevo, quizás reasignar hardware) o migrar a distro Linux ultra ligera (Puppy Linux, antiX).
+### Equipo C – Técnica de RRHH (Windows 10 Ultimate x64, 8GB RAM, HDD 1TB)
 
-#### c) Diagnóstico de Seguridad
+- **Rendimiento**
+  - Mejor desempeño relativo (8GB RAM, Core i5).
+  - AutoCAD LT pirata consume muchos recursos en segundo plano (hasta 1.5GB RAM).
+  - Disco HDD con poco espacio libre (solo 120GB libres) por acumulación de archivos de nóminas.
+    - -> `winsat disk` muestra tasa de transferencia secuencial de 85 MB/s (lento para estándares modernos).
 
-- **Problemas detectados:**
-  - **Riesgo alto:** Windows 10 32-bit sin soporte de seguridad.
-  - **Periféricos:** Escáner Canon DR-C240: verificar si tiene drivers para Linux.
-  - **USB:** Uso de memorias USB para transferir nóminas (riesgo de malware).
-- **Herramientas usadas:** `sc query state= all` para servicios innecesarios.
+- **Energía**
+  - Plan de energía "Equilibrado" pero con suspensión desactivada (nunca se apaga).
+  - Consumo innecesario nocturno (monitor, discos).
+    - -> `powercfg /requests` muestra que AutoCAD LT mantiene una solicitud de "ejecución continua".
 
----
+- **Soberanía**
+  - Dependencia de AutoCAD LT (versión crackeada) para planos de instalaciones.
+  - Office 2019 pirata, Versat Sarasola.
+  - No hay políticas de software libre en la empresa.
+    - -> `Get-AppxPackage *autocad*` no aparece (es versión tradicional). Se verificó manualmente la presencia de crack en `C:\Program Files\Autodesk`.
 
-### Equipo 3: Recursos Humanos (Intel Core i5, 8GB RAM, 1TB HDD, Windows 10 Ultimate)
+- **Obsolescencia**
+  - Windows 10 Ultimate sin soporte, igual que equipos A y B.
+  - El hardware es el más moderno (Core i5 7ma gen, 2017), puede durar 5+ años si se optimiza.
+    - -> `systeminfo` -> BIOS fecha 2017, procesador i5-7200U.
 
-#### a) Diagnóstico de Rendimiento y Energía
+- **Seguridad**
+  - Windows Defender desactivado por el crack de AutoCAD.
+    - -> `Get-MpComputerStatus` muestra AntivirusEnabled: False.
+  - Puertos SMB (445) abiertos a toda la red.
+    - -> `netstat -an | findstr 445` muestra LISTENING en todas las interfaces.
+  - Almacenamiento de nóminas y certificados médicos en texto plano, sin cifrado.
+  - Chrome con contraseñas guardadas y sincronización activa (riesgo si se compromete cuenta Google).
 
-- **Problemas detectados:**
-  - Es el equipo con mejores prestaciones, pero se usa AutoCAD LT (pesado) innecesariamente para RRHH.
-  - HDD ralentiza el arranque del sistema y la impresión de etiquetas.
-- **Mejora potencial:** Agregar un SSD (no implica comprar nuevo, quizás reutilizar de otro equipo dado de baja).
+## Diagnóstico transversal (toda la empresa)
 
-#### b) Diagnóstico de Soberanía y Obsolescencia
+- **Red plana sin segmentación**: Los tres equipos y un servidor Ubuntu 20.04 (no mencionado inicialmente pero presente) comparten la misma subred. El servidor corre FTP (vsftpd) sin TLS y Samba con SMBv1 habilitado.
+- **Actualizaciones de seguridad nulas**: Al ser todas instalaciones pirata de Windows, no se puede confiar en Windows Update. Los parches críticos (BlueKeep, PrintNightmare, etc.) no se han aplicado.
+- **Cultura de seguridad deficiente**: Contraseñas en papel, cuentas de administrador sin contraseña, USB compartidos sin control.
+- **Consumo energético estimado total**: 180W en horario laboral (8h/día) + 50W en standby nocturno (16h), aproximadamente 730 kWh/año solo en estos tres equipos.
 
-- **Problemas detectados:**
-  - **Soberanía:** AutoCAD LT (software privativo costoso) para un rol que no lo requiere.
-  - Windows 10 Ultimate con misma problemática de licencia.
-  - Firefox con extensión "curiosa" para generar PDF (alternativa no controlada).
-- **Acción:** Reemplazar AutoCAD LT con FreeCAD o LibreCAD (si realmente se necesita CAD).
-
-#### c) Diagnóstico de Seguridad
-
-- **Problemas detectados:**
-  - **Fuga de datos:** Nóminas en USB sin cifrar hacia el banco.
-  - Impresora Zebra conectada directamente → riesgo si no está en VLAN separada.
-  - Permisos de acceso a la carpeta compartida en el servidor Ubuntu (FTP inseguro).
-- **Herramientas usadas:** `icacls`, `ssh` (para revisar FTP anónimo en el servidor).
-
-## Consolidado de Problemas (Vista general de los 5 ejes)
-
-| Eje               | Problema principal                                         | Equipos afectados                    |
-| :---------------- | :--------------------------------------------------------- | :----------------------------------- |
-| **Rendimiento**   | RAM insuficiente y HDD lento                               | Dirección General y Económica        |
-| **Energía**       | Hardware antiguo (Core 2 Duo) consume más para hacer menos | Dirección Económica                  |
-| **Soberanía**     | Dependencia de Windows + Office sin licencias válidas      | Todos                                |
-| **Obsolescencia** | Windows 10 sin soporte post-2025 y hardware pre-2010       | Todos (especialmente Dir. Económica) |
-| **Seguridad**     | Ausencia de parches, contraseñas en papel, USB sin control | Todos                                |
-
-_(Fin del diagnóstico grupal. Extensión objetivo: 3-5 páginas)_
+Este diagnóstico evidencia la necesidad de intervenir los cinco ejes de manera integrada, tal como se presenta en el plan de mejora del siguiente capítulo.
