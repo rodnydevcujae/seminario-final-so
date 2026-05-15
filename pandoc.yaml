@@ -7,7 +7,11 @@ number-sections: false
 
 reference-doc: src/styles.dotx
 
+resource-path:
+  - src
+  - src/capitulos
+  - src/individuales
+
 metadata:
   lang: es-ES
-  papersize: a4
-  geometry: 'left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm'
+  
