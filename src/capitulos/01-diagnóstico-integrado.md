@@ -16,15 +16,10 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
 
 - **Rendimiento**
   - En entornos con Windows 10 sin optimizar se observó una utilización de CPU en reposo del orden del 35-40 %, atribuible a procesos en segundo plano (TeamViewer, servicios de Office y telemetría).
-    - El informe simulado de `powercfg /energy` reveló múltiples advertencias típicas de dispositivos que impiden la suspensión (USB, red).
-
-![Ejecución de powercfg /energy](../individuales/analista-rendimiento-energia/evidencias/exec-powercfg-energy.png)
-
+  - El informe simulado de `powercfg /energy` reveló múltiples advertencias típicas de dispositivos que impiden la suspensión (USB, red).
   - La memoria RAM se encontró cerca del límite práctico (aproximadamente 3 de los 4 GB en uso), con signos de paginación excesiva sobre un disco mecánico.
   - El disco HDD de 5400 rpm mostró síntomas de fragmentación elevada, sin que se cuantificara el porcentaje exacto; se espera que, en el sistema real, esté por encima del 15 %.
-
-![Ejecución de winsat disk](../individuales/analista-rendimiento-energia/evidencias/exec-winsat-disk.png)
-
+  
 - **Energía**
   - El plan activo era "Alto rendimiento". En simulaciones con características similares se estima un consumo idle cercano a los 60‑65 W, aunque no pudo medirse directamente.
     - El reporte simulado de `powercfg /energy` señaló dispositivos que no permiten la suspensión y la hibernación deshabilitada.
@@ -32,11 +27,6 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
 - **Soberanía**
   - Windows 10 Ultimate usado con activación no oficial; no se reciben actualizaciones de seguridad genuinas.
   - Servicios de telemetría (`DiagTrack`, `dmwappushservice`) se encontraron en ejecución, lo cual envía datos del sistema fuera del control de la empresa.
-
-![Detención del servicio DiagTrack](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-diagtrack.jpg)
-
-![Fallo al detener dmwappushservice](../individuales/analista-soberania-obsolescencia/evidencias/failed-stop-dmwappushservice.jpg)
-
   - Dependencia de Microsoft Office 2019 (sin licencia) y de TeamViewer en su configuración por defecto, ambos con componentes de telemetría adicionales.
 
 - **Obsolescencia**
@@ -50,8 +40,6 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
   - Cuenta de administrador con contraseña en blanco.
   - Sin antivirus actualizado.
   - En la simulación, `netstat -ano` mostró puertos 21, 3389 (RDP) y 5938 (TeamViewer) abiertos.
-
-![Puertos en escucha](../individuales/analista-seguridad/evidencias/check-listening-ports.jpg)
 
 ### Equipo B – Directora Económica (Windows 10 Ultimate 32 bits, 2GB RAM, HDD 320GB)
 
@@ -69,16 +57,11 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
   - Software utilizado: Office 2016 (fuera de soporte) y Versat Sarasola. No se emplean alternativas libres.
   - Se identificó que el navegador Chrome envía datos de uso sin control corporativo.
 
-![Detención del servicio Windows Update](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-wauserv.jpg)
-
 - **Obsolescencia**
   - El hardware es el más antiguo (2009) y la plataforma de 32 bits ya no es soportada por la mayoría de las distribuciones modernas, aunque una versión ligera de Linux de 32 bits podría extender su vida.
 
 - **Seguridad**
   - USB AutoRun activado (riesgo de propagación de malware por memorias compartidas).
-
-![Desactivación de reproducción automática](../individuales/analista-seguridad/evidencias/ui-desactivar-reproduccion-automatica.jpg)
-
   - Servicio Spooler de impresión activo sin necesidad real.
   - Antivirus AVG Free desactualizado; no brinda protección en tiempo real efectiva.
   - Contraseña débil ("123456") y múltiples eventos de fallos de inicio de sesión detectados en el visor de eventos.
@@ -96,9 +79,6 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
 
 - **Soberanía**
   - Dependencia total de AutoCAD LT (versión crackeada), Office 2019 pirata y Versat Sarasola sin alternativas libres.
-
-![Detención de Windows Search y Cortana](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-windowssearch+cortana.jpg)
-
   - No se han implementado políticas de software libre en la empresa.
 
 - **Obsolescencia**
@@ -107,9 +87,6 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
 - **Seguridad**
   - Windows Defender se encuentra desactivado para que el crack de AutoCAD funcione.
   - SMB (puerto 445) abierto a toda la red sin restricciones.
-
-![Verificación de SMB1](../individuales/analista-seguridad/evidencias/check-smb1.jpg)
-
   - Almacenamiento de nóminas y certificados médicos sin cifrado.
   - Navegador Chrome con sincronización de contraseñas activa, lo que supone un riesgo si la cuenta Google es comprometida.
 
@@ -118,9 +95,6 @@ Dado que los sistemas reales no estaban accesibles para mediciones directas, tod
 - **Red plana sin segmentación**: Los tres equipos y el servidor Ubuntu 20.04 (presente en la empresa) comparten la misma subred. El servidor ofrece FTP sin TLS (vsftpd) y Samba con SMBv1 habilitado.
 - **Actualizaciones de seguridad nulas**: Todas las instalaciones de Windows son no genuinas, por lo que Windows Update no es confiable y los parches críticos no se aplican.
 - **Cultura de seguridad deficiente**: Contraseñas en papel, cuentas de administrador sin contraseña, uso de memorias USB sin control.
-
-![Política de complejidad de contraseña habilitada](../individuales/analista-seguridad/evidencias/ui-complejidad-contraseña-habilitada.jpg)
-
 - **Consumo energético total estimado**: tomando como referencia perfiles típicos de hardware similares, los tres equipos podrían estar consumiendo en conjunto alrededor de 180 W en horario laboral, más un consumo nocturno que podría reducirse drásticamente con las medidas propuestas.
 
 Este diagnóstico evidencia la necesidad de intervenir los cinco ejes de manera integrada, tal como se presenta en el plan de mejora del siguiente capítulo.
