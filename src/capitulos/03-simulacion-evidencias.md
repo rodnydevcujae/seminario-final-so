@@ -29,6 +29,8 @@ Salida resumida:
 > - Timeout de disco configurado en 0 (nunca apaga).
 > - Plan de energía "Alto rendimiento" activado.
 
+![Ejecución de powercfg /energy](../individuales/analista-rendimiento-energia/evidencias/exec-powercfg-energy.png)
+
 **Después de aplicar optimizaciones** (script `optimizar-energia.bat`):
 
 ```batch
@@ -45,8 +47,7 @@ powercfg /h off
 - Consumo idle simulado (con `powertop` en Linux después de migración): **bajó de 11.2W a 7.8W** en Xubuntu en el mismo hardware virtual (estimado por `powertop`).
 - Tiempo de arranque: de 1:48 min a 0:52 min.
 
-**Captura:**  
-`evidencias/powertop_antes_despues.png` (simulada, ver anexo del analista de rendimiento).
+![Ejecución de winsat disk](../individuales/analista-rendimiento-energia/evidencias/exec-winsat-disk.png)
 
 ### Analista de soberanía y obsolescencia (Martín Alejandro)
 
@@ -80,6 +81,14 @@ sc config DiagTrack start=disabled
 sc stop DiagTrack
 ```
 
+![Detención del servicio DiagTrack](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-diagtrack.jpg)
+
+![Detención del servicio Windows Update](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-wauserv.jpg)
+
+![Fallo al detener dmwappushservice](../individuales/analista-soberania-obsolescencia/evidencias/failed-stop-dmwappushservice.jpg)
+
+![Detención de Windows Search y Cortana](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-windowssearch+cortana.jpg)
+
 **Resultado:** Reducción de procesos en segundo plano de 112 a 67.
 
 ### Analista de seguridad (Alex Dayan)
@@ -92,6 +101,8 @@ netstat -ano | findstr LISTENING
 
 Puertos abiertos: 445 (SMB), 3389 (RDP), 5040 (SSDP), 7680 (Windows Update), 139 (NetBIOS).
 
+![Puertos en escucha](../individuales/analista-seguridad/evidencias/check-listening-ports.jpg)
+
 **Aplicación de hardening** (script `hardening-windows.bat`):
 
 ```batch
@@ -99,6 +110,16 @@ netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound
 sc config RemoteRegistry start= disabled
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
 ```
+
+![Configuración de política de firewall](../individuales/analista-seguridad/evidencias/set-firewallpolicy-(blockin+allowout)-bound.jpg)
+
+![Deshabilitación de RemoteRegistry](../individuales/analista-seguridad/evidencias/disable-sc-remoteregister.jpg)
+
+![Bloqueo de FTP saliente](../individuales/analista-seguridad/evidencias/set-ftp-block-rule.jpg)
+
+![Verificación de regla FTP aplicada](../individuales/analista-seguridad/evidencias/check-ftp-rule-applied.jpg)
+
+![Deshabilitación de SMB1 con DISM](../individuales/analista-seguridad/evidencias/disable-smb1-with-dism.jpg)
 
 **Después del hardening:**
 
@@ -108,6 +129,8 @@ netstat -ano | findstr LISTENING
 
 Solo queda 445 (SMB) y 3389 (RDP) si se permite explícitamente; se añadieron reglas para bloquearlos si no son necesarios.
 
+![Consulta de RemoteRegistry detenido](../individuales/analista-seguridad/evidencias/sc-query-remoteregister.jpg)
+
 **Verificación con Lynis en el servidor Ubuntu (simulado):**
 
 ```bash
@@ -116,8 +139,6 @@ sudo lynis audit system
 ```
 
 Resultado: puntuación **58** antes, **79** después de aplicar UFW, deshabilitar vsftpd y configurar SSH.
-
-**Capturas:** `evidencias/lynis_antes.png` y `lynis_despues.png` (ver anexo seguridad).
 
 ### Coordinador (Rodny Roberto)
 

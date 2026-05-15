@@ -2,118 +2,125 @@
 
 ## Metodología
 
-Se realizó un diagnóstico colaborativo utilizando herramientas nativas de Windows (por ser el SO actual de los tres equipos) y, en el caso del servidor de archivos (Ubuntu 20.04, no listado inicialmente pero presente en la empresa), se emplearon herramientas de Linux. Cada analista aportó su mirada:
+Se realizó un diagnóstico colaborativo basado en una simulación de los entornos reales mediante máquinas virtuales y, en algunos casos, equipos de los propios estudiantes que ejecutaban Windows 10 sin licencia. Cada analista aportó herramientas desde su rol:
 
-- **Rendimiento y energía**: `powercfg /energy`, `tasklist`, `wmic`, Monitor de recursos, `perfmon`.
-- **Soberanía y obsolescencia**: `winget list`, `Get-AppxPackage`, `services.msc`, `systeminfo` (fecha de fin de soporte).
-- **Seguridad**: `netstat -ano`, `sc query`, `icacls`, Autoruns (Sysinternals), revisión de logs de Event Viewer.
+- **Rendimiento y energía**: `powercfg /energy`, `tasklist`, `winsat disk`, Monitor de recursos.
+- **Soberanía y obsolescencia**: revisión de servicios, procesos de telemetría y análisis de dependencias propietarias.
+- **Seguridad**: `netstat -ano`, `sc query`, Autoruns (Sysinternals), revisión de Event Viewer (simulado) y evaluaciones manuales de configuración.
+
+Dado que los sistemas reales no estaban accesibles para mediciones directas, todas las cifras que se presentan son estimaciones basadas en los perfiles de hardware proporcionados y en las observaciones de las máquinas virtuales.
 
 ## Diagnóstico por equipo
 
 ### Equipo A – Director General (Windows 10 Ultimate x64, 4GB RAM, HDD 1TB)
 
 - **Rendimiento**
-  - Uso de CPU en reposo: 35-40% (procesos en segundo plano: TeamViewer, actualizaciones de Office, telemetría).
-    - -> `powercfg /energy` mostró 5 advertencias (timeouts de USB, dispositivos no suspendidos).
-  - RAM utilizada: 3.2 GB de 4 GB (80%), con paginación excesiva al HDD.
-  - HDD 5400 rpm con fragmentación del 18%.
+  - En entornos con Windows 10 sin optimizar se observó una utilización de CPU en reposo del orden del 35-40 %, atribuible a procesos en segundo plano (TeamViewer, servicios de Office y telemetría).
+    - El informe simulado de `powercfg /energy` reveló múltiples advertencias típicas de dispositivos que impiden la suspensión (USB, red).
+
+![Ejecución de powercfg /energy](../individuales/analista-rendimiento-energia/evidencias/exec-powercfg-energy.png)
+
+  - La memoria RAM se encontró cerca del límite práctico (aproximadamente 3 de los 4 GB en uso), con signos de paginación excesiva sobre un disco mecánico.
+  - El disco HDD de 5400 rpm mostró síntomas de fragmentación elevada, sin que se cuantificara el porcentaje exacto; se espera que, en el sistema real, esté por encima del 15 %.
+
+![Ejecución de winsat disk](../individuales/analista-rendimiento-energia/evidencias/exec-winsat-disk.png)
 
 - **Energía**
-  - Plan de energía "Alto rendimiento" activado, consumo estimado: ~65W en reposo.
-    - -> Informe `powercfg /energy` – dispositivos que no permiten suspensión.
-  - Hibernación deshabilitada, pero suspensión de USB selectiva inactiva.
+  - El plan activo era "Alto rendimiento". En simulaciones con características similares se estima un consumo idle cercano a los 60‑65 W, aunque no pudo medirse directamente.
+    - El reporte simulado de `powercfg /energy` señaló dispositivos que no permiten la suspensión y la hibernación deshabilitada.
 
 - **Soberanía**
-  - Windows 10 Ultimate sin licencia oficial (activador no autorizado).
-    - -> `sc query DiagTrack` muestra estado RUNNING.
-  - Telemetría activa (`DiagTrack`, `dmwappushservice`).
-  - Dependencia de Microsoft Office 2019 (pirata) y TeamViewer (software propietario con telemetría).
-    - -> `winget list` muestra paquetes de terceros no controlados.
+  - Windows 10 Ultimate usado con activación no oficial; no se reciben actualizaciones de seguridad genuinas.
+  - Servicios de telemetría (`DiagTrack`, `dmwappushservice`) se encontraron en ejecución, lo cual envía datos del sistema fuera del control de la empresa.
+
+![Detención del servicio DiagTrack](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-diagtrack.jpg)
+
+![Fallo al detener dmwappushservice](../individuales/analista-soberania-obsolescencia/evidencias/failed-stop-dmwappushservice.jpg)
+
+  - Dependencia de Microsoft Office 2019 (sin licencia) y de TeamViewer en su configuración por defecto, ambos con componentes de telemetría adicionales.
 
 - **Obsolescencia**
-  - Windows 10 Ultimate (sin soporte extendido oficial después de 2025). Al ser versión no genuina, no recibe actualizaciones de seguridad desde hace >1 año.
-    - -> `systeminfo` muestra "Versión de SO: 10.0.19045 sin licencia".
-  - Hardware: Pentium G4400 (2015), HDD mecánico. Aún útil con SO ligero.
+  - Windows 10 en general se encuentra fuera del ciclo de soporte extendido; las versiones no genuinas no pueden recibir parches fiables.
+  - El hardware (Pentium G4400, 2015) aún puede ser útil si se migra a un sistema operativo ligero.
 
 - **Seguridad**
-  - Firewall de Windows desactivado por completo.
-  - TeamViewer configurado con inicio automático y sin autenticación de dos factores.
-  - FTP sin cifrado (puerto 21 abierto) para transferir actas.
-  - Usuario Administrador sin contraseña (cuenta "director" con blank password).
-    - -> `net user director` muestra contraseña no requerida.
-  - No hay antivirus actualizado.
-  - Evidencia general: `netstat -ano` muestra puertos 3389 (RDP), 21 (FTP), 5938 (TeamViewer).
+  - Firewall de Windows desactivado.
+  - TeamViewer iniciando con el sistema sin segundo factor de autenticación.
+  - FTP (puerto 21) escuchando; se usa para transferir actas sin cifrado.
+  - Cuenta de administrador con contraseña en blanco.
+  - Sin antivirus actualizado.
+  - En la simulación, `netstat -ano` mostró puertos 21, 3389 (RDP) y 5938 (TeamViewer) abiertos.
+
+![Puertos en escucha](../individuales/analista-seguridad/evidencias/check-listening-ports.jpg)
 
 ### Equipo B – Directora Económica (Windows 10 Ultimate 32 bits, 2GB RAM, HDD 320GB)
 
 - **Rendimiento**
-  - CPU Core 2 Duo (2009) constantemente al 70-90% con Chrome + Office abiertos.
-  - RAM 2 GB saturada (1.9 GB usados), uso intensivo de archivo de paginación en HDD.
-  - Escáner Canon con controladores legacy que generan interrupciones frecuentes.
-    - -> `tasklist /fi "memusage gt 50000"` muestra chrome.exe y winword.exe como responsables.
+  - El procesador Core 2 Duo (2009) se satura fácilmente al abrir Chrome y Office; en las pruebas simuladas se mantenía constantemente por encima del 70 % de uso de CPU.
+  - Al contar con solo 2 GB de RAM, el sistema depende intensamente del archivo de paginación, lo que genera una respuesta muy lenta.
+  - Los controladores del escáner Canon generan interrupciones frecuentes, aumentando la carga de CPU.
 
 - **Energía**
-  - Batería de respaldo (UPS) con informes de eficiencia baja.
-  - Plan equilibrado pero con dispositivos USB (escáner) que impiden suspensión.
-    - -> `powercfg /batteryreport` no aplicable (desktop).
+  - El plan de energía "Equilibrado" no logra aplicar suspensión completa por la presencia del escáner USB.
+  - No se pudo generar un informe de batería (equipo de escritorio), pero se infiere un consumo elevado para la antigüedad del hardware, probablemente en el rango de 50‑55 W en reposo.
 
 - **Soberanía**
-  - Sistema de 32 bits, limitado a 4GB RAM, pero con Windows 10 32 bits que ya no recibe actualizaciones de seguridad desde 2023.
-    - -> `systeminfo | find "System Type"` -> x86-based PC.
-  - Uso de Office 2016 (fuera de soporte) y Versat Sarasola (software cubano obligatorio).
-  - No hay alternativa libre instalada.
-    - -> `winget list` muestra Office 2016 y complementos de Canon.
+  - Sistema de 32 bits, lo que limita futuras actualizaciones de software y no recibe parches (último soporte real 2023).
+  - Software utilizado: Office 2016 (fuera de soporte) y Versat Sarasola. No se emplean alternativas libres.
+  - Se identificó que el navegador Chrome envía datos de uso sin control corporativo.
+
+![Detención del servicio Windows Update](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-wauserv.jpg)
 
 - **Obsolescencia**
-  - El hardware (Core 2 Duo, 2GB RAM) es de 2009. Windows 10 32 bits es la última versión compatible, pero sin parches.
-    - -> `wmic cpu get name` muestra Intel Core2 Duo E7500 @ 2.93GHz.
-  - El escáner Canon requiere drivers antiguos que no funcionan en Linux sin configuración compleja.
+  - El hardware es el más antiguo (2009) y la plataforma de 32 bits ya no es soportada por la mayoría de las distribuciones modernas, aunque una versión ligera de Linux de 32 bits podría extender su vida.
 
 - **Seguridad**
-  - USB AutoRun activado (riesgo de malware por pendrives compartidos).
-    - -> `reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer /v NoDriveTypeAutoRun` devuelve 0.
-  - Servicio de impresión (Spooler) activo sin necesidad.
-  - Antivirus AVG Free instalado pero desactualizado y sin protección en tiempo real.
-  - Cuentas de usuario con contraseñas débiles ("123456").
-    - -> Event Viewer muestra múltiples errores de seguridad ID 4625 (fallos de inicio de sesión).
+  - USB AutoRun activado (riesgo de propagación de malware por memorias compartidas).
+
+![Desactivación de reproducción automática](../individuales/analista-seguridad/evidencias/ui-desactivar-reproduccion-automatica.jpg)
+
+  - Servicio Spooler de impresión activo sin necesidad real.
+  - Antivirus AVG Free desactualizado; no brinda protección en tiempo real efectiva.
+  - Contraseña débil ("123456") y múltiples eventos de fallos de inicio de sesión detectados en el visor de eventos.
 
 ### Equipo C – Técnica de RRHH (Windows 10 Ultimate x64, 8GB RAM, HDD 1TB)
 
 - **Rendimiento**
-  - Mejor desempeño relativo (8GB RAM, Core i5).
-  - AutoCAD LT pirata consume muchos recursos en segundo plano (hasta 1.5GB RAM).
-  - Disco HDD con poco espacio libre (solo 120GB libres) por acumulación de archivos de nóminas.
-    - -> `winsat disk` muestra tasa de transferencia secuencial de 85 MB/s (lento para estándares modernos).
+  - Es el equipo más potente, pero AutoCAD LT (versión no oficial) consume una cantidad importante de RAM (hasta 1.5 GB) incluso cuando no está en uso activo.
+  - El disco HDD presenta poco espacio libre tras acumular nóminas y documentos pesados; en la simulación se observaron velocidades de transferencia secuenciales bajas para estándares actuales, aunque no se midió un valor exacto.
+  - No se cuantificó el porcentaje exacto de fragmentación, pero es previsible que sea alto por el uso intensivo de archivos grandes.
 
 - **Energía**
-  - Plan de energía "Equilibrado" pero con suspensión desactivada (nunca se apaga).
-  - Consumo innecesario nocturno (monitor, discos).
-    - -> `powercfg /requests` muestra que AutoCAD LT mantiene una solicitud de "ejecución continua".
+  - El plan "Equilibrado" se mantiene activo, pero el software de AutoCAD impide la entrada en estados de ahorro energético profundo (se evidenció en la simulación mediante `powercfg /requests`).
+  - El equipo permanece encendido durante la noche; se estima un consumo idle del orden de 65‑70 W, cifra que se podrá reducir significativamente con las medidas propuestas.
 
 - **Soberanía**
-  - Dependencia de AutoCAD LT (versión crackeada) para planos de instalaciones.
-  - Office 2019 pirata, Versat Sarasola.
-  - No hay políticas de software libre en la empresa.
-    - -> `Get-AppxPackage *autocad*` no aparece (es versión tradicional). Se verificó manualmente la presencia de crack en `C:\Program Files\Autodesk`.
+  - Dependencia total de AutoCAD LT (versión crackeada), Office 2019 pirata y Versat Sarasola sin alternativas libres.
+
+![Detención de Windows Search y Cortana](../individuales/analista-soberania-obsolescencia/evidencias/full-stop-windowssearch+cortana.jpg)
+
+  - No se han implementado políticas de software libre en la empresa.
 
 - **Obsolescencia**
-  - Windows 10 Ultimate sin soporte, igual que equipos A y B.
-  - El hardware es el más moderno (Core i5 7ma gen, 2017), puede durar 5+ años si se optimiza.
-    - -> `systeminfo` -> BIOS fecha 2017, procesador i5-7200U.
+  - El hardware (Core i5 de séptima generación, 2017) tiene capacidad para durar varios años más si se optimiza el sistema operativo.
 
 - **Seguridad**
-  - Windows Defender desactivado por el crack de AutoCAD.
-    - -> `Get-MpComputerStatus` muestra AntivirusEnabled: False.
-  - Puertos SMB (445) abiertos a toda la red.
-    - -> `netstat -an | findstr 445` muestra LISTENING en todas las interfaces.
-  - Almacenamiento de nóminas y certificados médicos en texto plano, sin cifrado.
-  - Chrome con contraseñas guardadas y sincronización activa (riesgo si se compromete cuenta Google).
+  - Windows Defender se encuentra desactivado para que el crack de AutoCAD funcione.
+  - SMB (puerto 445) abierto a toda la red sin restricciones.
+
+![Verificación de SMB1](../individuales/analista-seguridad/evidencias/check-smb1.jpg)
+
+  - Almacenamiento de nóminas y certificados médicos sin cifrado.
+  - Navegador Chrome con sincronización de contraseñas activa, lo que supone un riesgo si la cuenta Google es comprometida.
 
 ## Diagnóstico transversal (toda la empresa)
 
-- **Red plana sin segmentación**: Los tres equipos y un servidor Ubuntu 20.04 (no mencionado inicialmente pero presente) comparten la misma subred. El servidor corre FTP (vsftpd) sin TLS y Samba con SMBv1 habilitado.
-- **Actualizaciones de seguridad nulas**: Al ser todas instalaciones pirata de Windows, no se puede confiar en Windows Update. Los parches críticos (BlueKeep, PrintNightmare, etc.) no se han aplicado.
-- **Cultura de seguridad deficiente**: Contraseñas en papel, cuentas de administrador sin contraseña, USB compartidos sin control.
-- **Consumo energético estimado total**: 180W en horario laboral (8h/día) + 50W en standby nocturno (16h), aproximadamente 730 kWh/año solo en estos tres equipos.
+- **Red plana sin segmentación**: Los tres equipos y el servidor Ubuntu 20.04 (presente en la empresa) comparten la misma subred. El servidor ofrece FTP sin TLS (vsftpd) y Samba con SMBv1 habilitado.
+- **Actualizaciones de seguridad nulas**: Todas las instalaciones de Windows son no genuinas, por lo que Windows Update no es confiable y los parches críticos no se aplican.
+- **Cultura de seguridad deficiente**: Contraseñas en papel, cuentas de administrador sin contraseña, uso de memorias USB sin control.
+
+![Política de complejidad de contraseña habilitada](../individuales/analista-seguridad/evidencias/ui-complejidad-contraseña-habilitada.jpg)
+
+- **Consumo energético total estimado**: tomando como referencia perfiles típicos de hardware similares, los tres equipos podrían estar consumiendo en conjunto alrededor de 180 W en horario laboral, más un consumo nocturno que podría reducirse drásticamente con las medidas propuestas.
 
 Este diagnóstico evidencia la necesidad de intervenir los cinco ejes de manera integrada, tal como se presenta en el plan de mejora del siguiente capítulo.

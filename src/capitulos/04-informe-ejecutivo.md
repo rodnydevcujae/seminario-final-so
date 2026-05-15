@@ -7,56 +7,56 @@
 
 ## Resumen ejecutivo
 
-Hemos analizado los tres equipos de la empresa (Director General, Directora Económica y Técnica de RRHH) y detectado problemas de lentitud, alto consumo eléctrico, dependencia de software pirata sin soporte y riesgos de seguridad importantes (contraseñas débiles, puertos abiertos, falta de actualizaciones).
+Hemos analizado los tres equipos de la empresa (Director General, Directora Económica y Técnica de RRHH) mediante un entorno simulado que replica las condiciones de hardware y software. Se detectaron problemas de lentitud, alto consumo eléctrico estimado, dependencia de software sin licencia y riesgos de seguridad importantes (contraseñas débiles, puertos abiertos, falta de actualizaciones).
 
-**Sin comprar un solo componente nuevo**, proponemos un plan que extiende la vida útil de los equipos al menos **5 años más**, reduce el consumo eléctrico en un **25-30%** y mejora drásticamente la seguridad y la soberanía tecnológica.
+**Sin comprar un solo componente nuevo**, proponemos un plan que podría extender la vida útil de los equipos alrededor de **5 años más**, reducir el consumo eléctrico en un **25-30 %** y mejorar drásticamente la seguridad y la soberanía tecnológica.
 
 ## ¿Qué problemas había?
 
-- **Rendimiento**: Equipos A y B muy lentos (HDD mecánicos, poca RAM, procesos innecesarios). El equipo C funcionaba mejor pero con software pesado (AutoCAD pirata).
-- **Seguridad**: Contraseñas en papel, puertos abiertos (FTP, SMB sin cifrar), sin firewall, versiones piratas de Windows y Office que no reciben parches críticos.
-- **Dependencia tecnológica**: Todo el software es de grandes corporaciones extranjeras (Microsoft, Autodesk), sin licencias oficiales, con telemetría activa que envía datos sin control.
-- **Obsolescencia**: Windows 10 está fuera de soporte para versiones no genuinas; los equipos A y B son de 2015 y 2009 respectivamente, pero aún tienen potencial con software ligero.
+- **Rendimiento**: Equipos A y B lentos (HDD mecánicos, poca RAM, procesos innecesarios). El equipo C funcionaba mejor pero con software pesado (AutoCAD no oficial).
+- **Seguridad**: Contraseñas en papel, puertos abiertos (FTP, SMB sin cifrar), sin firewall, versiones no genuinas de Windows y Office que no reciben parches críticos.
+- **Dependencia tecnológica**: Todo el software es de grandes corporaciones extranjeras, sin licencias oficiales, con telemetría activa que envía datos sin control.
+- **Obsolescencia**: Windows 10 está fuera de soporte; los equipos A y B son de 2015 y 2009 respectivamente, pero aún tienen potencial con software ligero.
 
 ## ¿Qué hicimos sin comprar hardware nuevo?
 
-1. **Migramos a Linux** (Xubuntu) en los equipos A y B, y lo recomendamos también para el equipo C. Linux es gratuito, ligero y con actualizaciones de seguridad ilimitadas.
-2. **Reemplazamos el software pirata** por alternativas libres:
+1. **Migración a Linux** (Xubuntu) en los equipos A y B, y recomendación para el equipo C. Linux es gratuito, ligero y con actualizaciones de seguridad ilimitadas.
+2. **Reemplazo del software pirata** por alternativas libres:
    - LibreOffice en lugar de Microsoft Office.
    - QCad en lugar de AutoCAD (suficiente para planos básicos).
    - Thunderbird y Firefox en lugar de Outlook/Chrome.
-3. **Configuramos el firewall** (UFW en Linux, firewall de Windows en el equipo C temporal) bloqueando todo el tráfico entrante excepto lo necesario.
-4. **Aplicamos políticas de contraseñas robustas** y un gestor de contraseñas local (KeePass) para eliminar el papel con las claves.
-5. **Ciframos las nóminas** y documentos sensibles con VeraCrypt (software libre).
-6. **Optimizamos el consumo energético** con `powertop` y configuraciones de suspensión de discos y USB.
+3. **Configuración del firewall** (UFW en Linux, firewall de Windows en el equipo C temporal) bloqueando todo el tráfico entrante excepto el necesario.
+4. **Políticas de contraseñas robustas** y un gestor de contraseñas local (KeePass) para eliminar las claves en papel.
+5. **Cifrado de nóminas** y documentos sensibles con VeraCrypt (software libre).
+6. **Optimización del consumo energético** con `powertop` y configuraciones de suspensión de discos y USB.
 
 ## ¿Cuántos años más de vida útil estimamos?
 
-- **Equipo A (2015)**: Con Xubuntu y LibreOffice, puede funcionar sin problemas hasta 2031 (6 años más).
-- **Equipo B (2009)**: El hardware es muy antiguo, pero Xubuntu con 2GB RAM es usable para tareas administrativas. Estimamos **3-5 años más** con un uso moderado (sin multitarea pesada).
-- **Equipo C (2017)**: Con Linux o incluso con Windows optimizado, fácilmente llega a 2032 (6 años más).
+- **Equipo A (2015)**: Con Xubuntu y LibreOffice, podría funcionar sin problemas hasta al menos 2031 (6 años más).
+- **Equipo B (2009)**: El hardware es muy antiguo, pero Xubuntu con 2 GB RAM es usable para tareas administrativas. Esperamos extender su uso entre **3 y 5 años más**.
+- **Equipo C (2017)**: Con Linux o incluso con Windows optimizado, fácilmente llegaría a 2032 (6 años más).
 
-Promedio: **5 años adicionales**, cumpliendo el objetivo.
+Promedio estimado: **5 años adicionales**, cumpliendo el objetivo.
 
 ## ¿Cuánto ahorro energético anual (kWh y USD)?
 
-Mediciones simuladas (usando `powertop` y cálculos estándar):
+Las siguientes son estimaciones basadas en perfiles de consumo típicos para el hardware descrito y en los resultados de simulación con `powertop`:
 
-| Equipo    | Consumo antes (W idle) | Consumo después (W idle) | Reducción | Ahorro anual (kWh) | Ahorro anual (USD)\* |
-| --------- | ---------------------- | ------------------------ | --------- | ------------------ | -------------------- |
-| A         | 65                     | 45                       | 31%       | 58 kWh             | $7.5                 |
-| B         | 55                     | 38                       | 31%       | 50 kWh             | $6.5                 |
-| C         | 70                     | 52                       | 26%       | 66 kWh             | $8.6                 |
-| **Total** |                        |                          |           | **174 kWh**        | **$22.6**            |
+| Equipo    | Consumo estimado actual (W idle) | Consumo esperado tras mejora (W idle) | Reducción estimada | Ahorro anual (kWh) | Ahorro anual (USD)* |
+| --------- | -------------------------------- | ------------------------------------- | ------------------ | ------------------ | -------------------- |
+| A         | ~65                              | ~45                                   | ~31 %              | 58 kWh             | $7.5                 |
+| B         | ~55                              | ~38                                   | ~31 %              | 50 kWh             | $6.5                 |
+| C         | ~70                              | ~52                                   | ~26 %              | 66 kWh             | $8.6                 |
+| **Total** |                                  |                                       |                    | **174 kWh**        | **$22.6**            |
 
-\*Tarifa eléctrica promedio en Cuba para el sector estatal (0.13 USD/kWh aprox., aunque sujeta a subsidios). El ahorro es modesto en términos monetarios, pero la reducción de huella de carbono y la menor generación de calor son beneficios adicionales.
+\*Tarifa eléctrica orientativa para el sector estatal en Cuba (~0.13 USD/kWh). El ahorro monetario es modesto, pero la reducción de huella de carbono y la menor generación de calor son beneficios adicionales.
 
 ## ¿Cómo mejoró la soberanía tecnológica?
 
-- **Cero dependencia de Microsoft o Autodesk**: Todo el software es de código abierto (Linux, LibreOffice, QCad, VeraCrypt).
-- **Actualizaciones controladas**: Los parches de seguridad los decide la empresa, no una corporación extranjera. No hay telemetría ni envío de datos.
-- **Sin licencias ni activadores piratas**: Se elimina el riesgo legal y la inyección de malware a través de cracks.
-- **Formación interna**: Capacitamos al personal en las nuevas herramientas, fomentando la autonomía tecnológica.
+- **Cero dependencia de Microsoft o Autodesk**: Todo el software propuesto es de código abierto (Linux, LibreOffice, QCad, VeraCrypt).
+- **Actualizaciones controladas**: La empresa decidirá cuándo aplicar parches, sin telemetría ni envío de datos a terceros.
+- **Sin licencias ni activadores ilegales**: Se elimina el riesgo legal y la posibilidad de malware inyectado por cracks.
+- **Formación interna**: Se contempla la capacitación del personal en las nuevas herramientas, fomentando la autonomía tecnológica.
 
 ## ¿Qué riesgos de seguridad se redujeron?
 
@@ -70,11 +70,11 @@ Mediciones simuladas (usando `powertop` y cálculos estándar):
 | Falta de firewall                     | ++ Activo en todos los equipos          |
 | Cuentas con contraseña vacía          | ++ Eliminadas, políticas de complejidad |
 
-**Riesgo residual**: El equipo C mantendrá Windows temporalmente hasta validar que QCad cumple los requisitos de AutoCAD. Durante ese periodo, se aplican reglas estrictas de firewall y actualizaciones manuales.
+**Riesgo residual**: El equipo C mantendrá Windows temporalmente hasta validar que QCad cumple los requisitos de AutoCAD. Durante ese periodo, se aplicarán reglas estrictas de firewall y actualizaciones manuales mensuales.
 
 ## Conclusión
 
-La solución propuesta es **económica, sostenible y alinea la tecnología de Sumifer con los principios de soberanía y seguridad**. No se necesita hardware nuevo, se reduce el consumo eléctrico, se alarga la vida útil de los equipos más de 5 años y se protege la información de la empresa. Recomendamos implementar el plan por fases (inmediata, piloto, completa) con un seguimiento trimestral.
+La solución propuesta es **económica, sostenible y alinea la tecnología de Sumifer con los principios de soberanía y seguridad**. No se necesita hardware nuevo, se reduciría el consumo eléctrico, se alargaría la vida útil de los equipos más de 5 años y se protegería la información de la empresa. Recomendamos implementar el plan por fases (inmediata, piloto, completa) con un seguimiento trimestral.
 
 El equipo técnico queda a disposición para la ejecución del plan o para cualquier consulta adicional.
 
